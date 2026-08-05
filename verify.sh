@@ -2,7 +2,7 @@
 # Verifies this mirror against its upstream source:
 #   repo:   https://github.com/ethereum-optimism/optimism
 #   path:   rust/op-revm
-#   commit: b40d2ce097b928fe1a4ec79a8a1925eb231c675e (tag op-reth/v2.4.0)
+#   commit: a9a8dad3f1500a4cc2e4077edb480848bfdef29a (tag op-reth/v2.4.1)
 #
 # Every file must be byte-identical to upstream, except Cargo.toml, whose
 # `workspace = true` inheritances are flattened to the monorepo workspace's
@@ -14,7 +14,7 @@ set -euo pipefail
 
 UPSTREAM_REPO="ethereum-optimism/optimism"
 UPSTREAM_PATH="rust/op-revm"
-COMMIT="b40d2ce097b928fe1a4ec79a8a1925eb231c675e"
+COMMIT="a9a8dad3f1500a4cc2e4077edb480848bfdef29a"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 RAW_BASE="https://raw.githubusercontent.com/${UPSTREAM_REPO}/${COMMIT}/${UPSTREAM_PATH}"
 API_BASE="https://api.github.com/repos/${UPSTREAM_REPO}/contents/${UPSTREAM_PATH}"

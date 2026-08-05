@@ -9,7 +9,7 @@ depending on the huge Optimism monorepo.
 |---|---|
 | Upstream repository | <https://github.com/ethereum-optimism/optimism> |
 | Upstream path | `rust/op-revm` |
-| Upstream commit | `b40d2ce097b928fe1a4ec79a8a1925eb231c675e` (tag `op-reth/v2.4.0`) |
+| Upstream commit | `a9a8dad3f1500a4cc2e4077edb480848bfdef29a` (tag `op-reth/v2.4.1`) |
 | Crate version | `20.0.0` |
 
 All files are verbatim copies of upstream, with two exceptions:
@@ -39,6 +39,32 @@ upstream commit** into this crate's manifest, merging any locally declared
 `features`/`default-features` with the workspace entry's. Never carry values
 over from a previously flattened manifest: the workspace's versions move
 between commits.
+
+Rather than resolving the inheritance by hand, ask cargo itself. In the
+monorepo's `rust/` workspace, checked out at the pinned commit:
+
+```sh
+# to understand the dependencies and features op-revm brings
+# get complete op-revm manifest
+cargo metadata --format-version 1 --no-deps | jq -r '.packages[] | select(.name == "op-revm")'
+```
+
+This prints the crate's manifest with all workspace inheritance already
+resolved: each dependency's version requirement, `default-features`,
+`optional`, and effective feature list, plus the resolved `[package]` fields
+(`edition`, `rust_version`, `license`, ...). Two reading notes:
+
+- inherited feature lists appear as the raw workspace + member concatenation
+  (e.g. `"derive"` twice) — treat them as a set;
+- dependencies that are path dependencies in the monorepo (a `path` key in the
+  output, e.g. `op-alloy-consensus`) must be flattened to their `version` on
+  crates.io, dropping the path — the same rewrite `cargo publish` would do.
+  Confirm that version actually exists on crates.io.
+
+Running the same command in this repo after flattening (dropping the `jq`
+package filter or keeping it, either works) and comparing the two outputs
+field by field is a direct check that the flattened manifest declares exactly
+what upstream resolves to.
 
 ## Updating to a new upstream commit
 
