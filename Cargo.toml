@@ -1,5 +1,5 @@
 # Vendored from https://github.com/ethereum-optimism/optimism `rust/op-revm`
-# at commit bf4fc514f8ad9e80cacacf47070029a3248538c1.
+# at commit da6d3252491754837a778061db0cc47236ec13c6 (tag `op-reth/v2.6.0`).
 #
 # No op-revm release supports revm 42 (op-revm 20.0.0 on crates.io pins revm
 # ^38), and depending on the monorepo via git pulls in over 1 GB of unrelated
