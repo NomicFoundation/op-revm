@@ -29,11 +29,15 @@ pub enum OpSpecId {
     JOVIAN,
     /// Karst spec id.
     KARST,
-    /// Interop spec id.
-    INTEROP,
+    /// Lagoon spec id.
+    LAGOON,
 }
 
 impl OpSpecId {
+    /// UPSTREAM-MIRROR(set): revm-primitives@42.0.0 `revm_primitives::hardfork::SpecId`
+    ///
+    /// Maps each OP fork onto the L1 fork whose semantics it activates. A new upstream
+    /// `SpecId` needs a decision here: which OP fork (if any) turns it on.
     /// Converts the [`OpSpecId`] into a [`SpecId`].
     pub const fn into_eth_spec(self) -> SpecId {
         match self {
@@ -41,9 +45,9 @@ impl OpSpecId {
             Self::CANYON => SpecId::SHANGHAI,
             Self::ECOTONE | Self::FJORD | Self::GRANITE | Self::HOLOCENE => SpecId::CANCUN,
             Self::ISTHMUS | Self::JOVIAN => SpecId::PRAGUE,
-            // Interop (activated by the Lagoon hardfork) is newer than Karst, so its eth base
+            // Lagoon (the hardfork that activates interop) is newer than Karst, so its eth base
             // must not be older than Karst's (OSAKA).
-            Self::KARST | Self::INTEROP => SpecId::OSAKA,
+            Self::KARST | Self::LAGOON => SpecId::OSAKA,
         }
     }
 
@@ -74,7 +78,7 @@ impl FromStr for OpSpecId {
             name::ISTHMUS => Ok(Self::ISTHMUS),
             name::JOVIAN => Ok(Self::JOVIAN),
             name::KARST => Ok(Self::KARST),
-            name::INTEROP => Ok(Self::INTEROP),
+            name::LAGOON => Ok(Self::LAGOON),
             _ => Err(UnknownHardfork),
         }
     }
@@ -93,7 +97,7 @@ impl From<OpSpecId> for &'static str {
             OpSpecId::ISTHMUS => name::ISTHMUS,
             OpSpecId::JOVIAN => name::JOVIAN,
             OpSpecId::KARST => name::KARST,
-            OpSpecId::INTEROP => name::INTEROP,
+            OpSpecId::LAGOON => name::LAGOON,
         }
     }
 }
@@ -120,8 +124,8 @@ pub mod name {
     pub const JOVIAN: &str = "Jovian";
     /// Karst spec name.
     pub const KARST: &str = "Karst";
-    /// Interop spec name.
-    pub const INTEROP: &str = "Interop";
+    /// Lagoon spec name.
+    pub const LAGOON: &str = "Lagoon";
 }
 
 #[cfg(test)]
@@ -273,20 +277,20 @@ mod tests {
     }
 
     #[test]
-    fn karst_and_interop_eth_base_is_osaka() {
-        // Interop (activated by the Lagoon hardfork) is newer than Karst, so it must not downgrade
-        // the eth base below Karst's OSAKA.
+    fn karst_and_lagoon_eth_base_is_osaka() {
+        // Lagoon (the hardfork that activates interop) is newer than Karst, so it must not
+        // downgrade the eth base below Karst's OSAKA.
         assert_eq!(OpSpecId::KARST.into_eth_spec(), SpecId::OSAKA);
-        assert_eq!(OpSpecId::INTEROP.into_eth_spec(), SpecId::OSAKA);
+        assert_eq!(OpSpecId::LAGOON.into_eth_spec(), SpecId::OSAKA);
     }
 
     /// Conformance guard: the eth base spec must be non-decreasing across the OP fork chronology
     /// (oldest to newest). A newer OP fork must never map to an older eth base.
     #[test]
     fn eth_base_is_monotonic_across_chronology() {
-        // OP forks in chronological order, oldest first. INTEROP (the Lagoon hardfork's spec) is
-        // newest. This also matches the `OpSpecId` discriminant order, which `is_enabled_in` relies
-        // on.
+        // OP forks in chronological order, oldest first. LAGOON (the hardfork that activates
+        // interop) is newest. This also matches the `OpSpecId` discriminant order, which
+        // `is_enabled_in` relies on.
         let chronology = [
             OpSpecId::BEDROCK,
             OpSpecId::REGOLITH,
@@ -298,7 +302,7 @@ mod tests {
             OpSpecId::ISTHMUS,
             OpSpecId::JOVIAN,
             OpSpecId::KARST,
-            OpSpecId::INTEROP,
+            OpSpecId::LAGOON,
         ];
         for pair in chronology.windows(2) {
             let [older, newer] = [pair[0], pair[1]];

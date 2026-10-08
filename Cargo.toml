@@ -1,7 +1,7 @@
 # Vendored from https://github.com/ethereum-optimism/optimism `rust/op-revm`
-# at commit a9a8dad3f1500a4cc2e4077edb480848bfdef29a (tag `op-reth/v2.4.1`).
+# at commit da6d3252491754837a778061db0cc47236ec13c6 (tag `op-reth/v2.6.0`).
 #
-# No op-revm release supports revm 41 (op-revm 20.0.0 on crates.io pins revm
+# No op-revm release supports revm 42 (op-revm 20.0.0 on crates.io pins revm
 # ^38), and depending on the monorepo via git pulls in over 1 GB of unrelated
 # sources, so the crate is vendored instead. All files are verbatim copies
 # except this manifest, whose `workspace = true` inheritances from the
@@ -23,8 +23,11 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 # revm
-revm = { version = "41.0.0", default-features = false }
+revm = { version = "42.0.1", default-features = false }
 auto_impl = "1.3.0"
+
+# alloy
+alloy-eips = { version = "2.3.0", default-features = false }
 
 # op-alloy
 op-alloy-consensus = { version = "2.0.0", default-features = false }
@@ -38,7 +41,7 @@ serde = { version = "1.0.228", default-features = false, features = [
 
 [dev-dependencies]
 rstest = "0.26.1"
-alloy-sol-types = { version = "1.6.0", default-features = false }
+alloy-sol-types = { version = "1.6.1", default-features = false }
 sha2 = { version = "0.10.9", default-features = false }
 serde_json = { version = "1.0.149", default-features = false, features = [
 	"alloc",
@@ -48,7 +51,7 @@ serde = { version = "1.0.228", default-features = false, features = [
 	"derive",
 	"alloc",
 ] }
-alloy-primitives = { version = "1.6.0", default-features = false, features = [
+alloy-primitives = { version = "1.6.1", default-features = false, features = [
 	"map-foldhash",
 ] }
 
@@ -57,13 +60,14 @@ default = ["std", "c-kzg", "secp256k1", "portable", "blst"]
 std = [
 	"serde?/std",
 	"revm/std",
+	"alloy-eips/std",
 	"op-alloy-consensus/std",
 	"alloy-sol-types/std",
 	"sha2/std",
 	"serde_json/std",
 	"alloy-primitives/std",
 ]
-serde = ["dep:serde", "revm/serde", "alloy-primitives/serde", "op-alloy-consensus/serde"]
+serde = ["dep:serde", "revm/serde", "alloy-eips/serde", "alloy-primitives/serde", "op-alloy-consensus/serde"]
 portable = ["revm/portable"]
 
 dev = [
