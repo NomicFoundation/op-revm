@@ -9,7 +9,7 @@ depending on the huge Optimism monorepo.
 |---|---|
 | Upstream repository | <https://github.com/ethereum-optimism/optimism> |
 | Upstream path | `rust/op-revm` |
-| Upstream commit | `da6d3252491754837a778061db0cc47236ec13c6` (tag `op-reth/v2.6.0`) |
+| Upstream commit | `93d9ec9d2f0fadf3b587c64b3f423e89ffaa5199` (head of PR [#23046](https://github.com/ethereum-optimism/optimism/pull/23046), not yet merged; no release tag) |
 | Crate version | `20.0.0` |
 
 All files are verbatim copies of upstream, with two exceptions:
