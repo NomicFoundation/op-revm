@@ -1,6 +1,6 @@
 # Vendored from https://github.com/ethereum-optimism/optimism `rust/op-revm`
-# at commit 93d9ec9d2f0fadf3b587c64b3f423e89ffaa5199 (head of PR #23046,
-# "rust!: update reth to v2.6.0", not yet merged into `develop`).
+# at commit df7168efb50b7152ae0493efa6672b096a6d63de (PR #23046 "rust!: update
+# reth to v2.6.0" squash-merged into `develop` on 2026-10-16; no release tag yet).
 #
 # No op-revm release supports revm 43 (op-revm 20.0.0 on crates.io pins revm
 # ^38), and depending on the monorepo via git pulls in over 1 GB of unrelated
