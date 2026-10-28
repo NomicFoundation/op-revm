@@ -1,7 +1,8 @@
 # Vendored from https://github.com/ethereum-optimism/optimism `rust/op-revm`
-# at commit da6d3252491754837a778061db0cc47236ec13c6 (tag `op-reth/v2.6.0`).
+# at commit d6620202d4e563957830e688007a0cab29bd80f3 (tag `op-reth/v2.8.0`, the
+# first op-reth release built on revm 43).
 #
-# No op-revm release supports revm 42 (op-revm 20.0.0 on crates.io pins revm
+# No op-revm release supports revm 43 (op-revm 20.0.0 on crates.io pins revm
 # ^38), and depending on the monorepo via git pulls in over 1 GB of unrelated
 # sources, so the crate is vendored instead. All files are verbatim copies
 # except this manifest, whose `workspace = true` inheritances from the
@@ -23,11 +24,11 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 # revm
-revm = { version = "42.0.1", default-features = false }
+revm = { version = "43.0.2", default-features = false }
 auto_impl = "1.3.0"
 
 # alloy
-alloy-eips = { version = "2.3.0", default-features = false }
+alloy-eips = { version = "2.4.2", default-features = false }
 
 # op-alloy
 op-alloy-consensus = { version = "2.0.0", default-features = false }
@@ -69,6 +70,9 @@ std = [
 ]
 serde = ["dep:serde", "revm/serde", "alloy-eips/serde", "alloy-primitives/serde", "op-alloy-consensus/serde"]
 portable = ["revm/portable"]
+# Compile against revm's feature-gated async database fields; mainly a CI feature-unification check.
+# Host targets only: revm's fiber stack does not build for wasm or MIPS.
+asyncdb = ["std", "revm/asyncdb"]
 
 dev = [
 	"revm/dev",
